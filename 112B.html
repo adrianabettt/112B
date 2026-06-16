@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atividade Final </title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Nunito', sans-serif; background: #FFF8EE; min-height: 100vh; padding: 0 0 60px; }
+
+  /* TOPO */
+  .topo { background: #F5A623; padding: 16px 24px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 0 #D4851A; }
+  .topo-icon { font-size: 44px; line-height: 1; }
+  .topo-title { font-size: 22px; font-weight: 900; color: #3D1C00; line-height: 1.1; }
+  .topo-sub { font-size: 13px; font-weight: 700; color: #6B3000; margin-top: 3px; text-transform: uppercase; letter-spacing: 1px; }
+
+  /* PROGRESSO */
+  .prog-wrap { background: #FFE5B0; padding: 10px 24px; display: flex; align-items: center; gap: 12px; }
+  .prog-label { font-size: 13px; font-weight: 900; color: #6B3000; white-space: nowrap; }
+  .prog-track { flex: 1; background: #fff; border-radius: 99px; height: 12px; border: 2px solid #D4851A; overflow: hidden; }
+  .prog-bar { height: 100%; background: #F5A623; border-radius: 99px; transition: width 0.5s ease; width: 0%; }
+  .prog-stars { display: flex; gap: 4px; }
+  .prog-star { font-size: 18px; opacity: 0.2; transition: opacity 0.3s; }
+  .prog-star.on { opacity: 1; }
+
+  .container { max-width: 700px; margin: 0 auto; padding: 20px 16px 0; }
+
+  /* CARD */
+  .act-card { background: #fff; border-radius: 24px; border: 3px solid #F5A623; padding: 24px; margin-bottom: 24px; box-shadow: 0 6px 0 #F5A623; }
+  .act-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; flex-wrap: wrap; }
+  .act-num { background: #F5A623; color: #3D1C00; font-size: 18px; font-weight: 900; width: 38px; height: 38px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .act-title { font-size: 17px; font-weight: 900; color: #222; text-transform: uppercase; line-height: 1.2; flex: 1; }
+  .act-badge { background: #FFF4DD; border: 2px solid #F5A623; border-radius: 10px; padding: 4px 12px; font-size: 14px; font-weight: 900; color: #6B3000; white-space: nowrap; }
+  .act-badge.ok     { background: #D4EDDA; border-color: #28A745; color: #155724; }
+  .act-badge.parcial{ background: #FFF3CD; border-color: #FFC107; color: #856404; }
+  .act-instr { font-size: 15px; font-weight: 700; color: #555; margin-bottom: 18px; line-height: 1.4; }
+
+  .feedback { border-radius: 14px; padding: 12px 16px; font-size: 16px; font-weight: 900; margin-top: 14px; display: none; line-height: 1.4; }
+  .feedback.show { display: block; }
+  .feedback.ok  { background: #D4EDDA; color: #155724; border: 2px solid #28A745; }
+  .feedback.err { background: #F8D7DA; color: #721C24; border: 2px solid #DC3545; }
+
+  .btn-check { margin-top: 14px; background: #F5A623; border: none; border-radius: 12px; padding: 12px 28px; font-size: 16px; font-weight: 900; color: #3D1C00; cursor: pointer; font-family: 'Nunito', sans-serif; box-shadow: 0 4px 0 #D4851A; transition: transform 0.1s; }
+  .btn-check:active { transform: translateY(2px); box-shadow: 0 2px 0 #D4851A; }
+  .btn-check:disabled { background: #ddd; color: #999; box-shadow: 0 4px 0 #bbb; cursor: default; }
+
+  /* ===== Q1 ===== */
+  .cena-box { background: #FFF4DD; border: 3px solid #F5A623; border-radius: 18px; padding: 16px; text-align: center; margin-bottom: 16px; }
+  .cena-emoji { font-size: 56px; display: block; margin-bottom: 8px; }
+  .cena-texto { font-size: 17px; font-weight: 900; color: #3D1C00; line-height: 1.4; }
+  .opcoes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .opcao-btn { border: 3px solid #ddd; border-radius: 16px; padding: 16px 12px; text-align: center; cursor: pointer; background: #FAFAFA; transition: all 0.15s; user-select: none; }
+  .opcao-btn:hover { border-color: #F5A623; background: #FFF4DD; transform: scale(1.02); }
+  .opcao-btn .op-icon { font-size: 36px; display: block; margin-bottom: 8px; }
+  .opcao-btn .op-txt  { font-size: 14px; font-weight: 900; color: #333; text-transform: uppercase; line-height: 1.3; }
+  .opcao-btn.correct  { border-color: #28A745; background: #D4EDDA; pointer-events: none; }
+  .opcao-btn.correct .op-txt { color: #155724; }
+  .opcao-btn.wrong    { border-color: #DC3545; background: #F8D7DA; }
+  .opcao-btn.wrong .op-txt { color: #721C24; }
+
+  /* ===== Q2 ===== */
+  .chips-area { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 18px; }
+  .chip { background: #EEF6FF; border: 3px solid #90C1F5; border-radius: 14px; padding: 12px 8px; text-align: center; font-size: 13px; font-weight: 900; color: #1A4D8F; text-transform: uppercase; cursor: grab; user-select: none; transition: transform 0.1s, opacity 0.2s; }
+  .chip:active { cursor: grabbing; transform: scale(1.05); }
+  .chip.usada { opacity: 0.25; pointer-events: none; }
+  .chip .ch-icon { font-size: 28px; display: block; margin-bottom: 5px; }
+  .grupos { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .grupo-card { border: 3px solid #F5A623; border-radius: 18px; background: #FFF8EE; padding: 14px 12px; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+  .grupo-titulo { font-size: 16px; font-weight: 900; color: #3D1C00; text-transform: uppercase; text-align: center; display: flex; align-items: center; gap: 6px; }
+  .grupo-zona { width: 100%; min-height: 56px; border: 3px dashed #F5A623; border-radius: 12px; background: #fff; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 6px; padding: 8px; font-size: 12px; font-weight: 900; color: #ccc; text-transform: uppercase; transition: all 0.15s; cursor: pointer; }
+  .grupo-zona.over    { background: #FFF4DD; border-color: #D4851A; border-style: solid; }
+  .grupo-zona.correto { border-color: #28A745; border-style: solid; background: #eafaea; }
+  .slot-chip { background: #FFF4DD; border: 2px solid #F5A623; border-radius: 10px; padding: 5px 10px; font-size: 12px; font-weight: 900; color: #3D1C00; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
+  .slot-chip .sl-icon { font-size: 16px; }
+  .slot-chip.ok-slot { border-color: #28A745; background: #D4EDDA; color: #155724; cursor: default; }
+
+  /* ===== Q3 ===== */
+  .seq-instr-box { background: #EEF6FF; border: 2px solid #90C1F5; border-radius: 14px; padding: 12px 16px; margin-bottom: 16px; font-size: 15px; font-weight: 900; color: #1A4D8F; text-align: center; line-height: 1.5; }
+  .seq-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+  .seq-card { border: 3px solid #ddd; border-radius: 16px; padding: 14px 8px 10px; text-align: center; background: #FAFAFA; cursor: pointer; transition: all 0.15s; user-select: none; position: relative; }
+  .seq-card:hover { border-color: #F5A623; background: #FFF4DD; transform: scale(1.03); }
+  .seq-card.selecionado { border-color: #F5A623; background: #FFF4DD; }
+  .seq-card.correto { border-color: #28A745; background: #D4EDDA; pointer-events: none; }
+  .seq-card.errado  { border-color: #DC3545; background: #F8D7DA; }
+  .seq-num { position: absolute; top: 6px; left: 8px; background: #F5A623; color: #3D1C00; font-size: 13px; font-weight: 900; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .seq-num.ok { background: #28A745; color: #fff; }
+  .seq-icon { font-size: 38px; display: block; margin: 4px 0 8px; }
+  .seq-lbl  { font-size: 12px; font-weight: 900; color: #555; text-transform: uppercase; letter-spacing: 0.5px; }
+  .seq-card.correto .seq-lbl { color: #155724; }
+  .seq-card.errado  .seq-lbl { color: #721C24; }
+
+  /* ===== NOTA FINAL ===== */
+  @keyframes notaEntrada {
+    0%   { opacity: 0; transform: scale(0.85) translateY(30px); }
+    60%  { transform: scale(1.04) translateY(-4px); }
+    100% { opacity: 1; transform: scale(1) translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50%       { transform: scale(1.06); }
+  }
+  .nota-wrap {
+    display: none; text-align: center; background: #fff;
+    border-radius: 24px; border: 4px solid #F5A623;
+    box-shadow: 0 8px 0 #D4851A, 0 0 0 6px #FFE5B0;
+    padding: 36px 20px; margin-bottom: 24px;
+  }
+  .nota-wrap.show {
+    display: block;
+    animation: notaEntrada 0.6s cubic-bezier(0.34,1.56,0.64,1) both;
+  }
+  .nota-wrap.show .nota-circ { animation: pulse 1.2s ease-in-out 0.7s 2; }
+  .nota-emoji  { font-size: 68px; display: block; margin-bottom: 8px; }
+  .nota-estrelas { font-size: 34px; letter-spacing: 6px; margin-bottom: 12px; }
+  .nota-titulo { font-size: 24px; font-weight: 900; color: #3D1C00; margin-bottom: 18px; text-transform: uppercase; }
+  .nota-label  { font-size: 14px; font-weight: 900; color: #888; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+  .nota-circ   { width: 150px; height: 150px; border-radius: 50%; display: flex; flex-direction: column; align-items: center; justify-content: center; margin: 0 auto 18px; border: 6px solid #F5A623; background: #FFF4DD; }
+  .nota-circ.n10    { border-color: #28A745; background: #D4EDDA; }
+  .nota-circ.nalta  { border-color: #5cb85c; background: #eafaea; }
+  .nota-circ.nmed   { border-color: #FFC107; background: #FFF3CD; }
+  .nota-circ.nbaixa { border-color: #DC3545; background: #F8D7DA; }
+  .nota-num  { font-size: 56px; font-weight: 900; line-height: 1; color: #3D1C00; }
+  .nota-de10 { font-size: 17px; font-weight: 700; color: #888; }
+  .n10   .nota-num, .nalta  .nota-num  { color: #155724; }
+  .nmed  .nota-num  { color: #856404; }
+  .nbaixa .nota-num { color: #721C24; }
+  .n10   .nota-de10, .nalta  .nota-de10 { color: #155724; }
+  .nmed  .nota-de10  { color: #856404; }
+  .nbaixa .nota-de10 { color: #721C24; }
+  .nota-det { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; max-width: 480px; margin: 0 auto 18px; }
+  .det-card { border-radius: 14px; padding: 12px 10px; text-align: center; }
+  .det-card.ok  { border: 2px solid #28A745; background: #D4EDDA; }
+  .det-card.par { border: 2px solid #FFC107; background: #FFF3CD; }
+  .det-card.err { border: 2px solid #DC3545; background: #F8D7DA; }
+  .det-nome { font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .det-card.ok  .det-nome { color: #155724; }
+  .det-card.par .det-nome { color: #856404; }
+  .det-card.err .det-nome { color: #721C24; }
+  .det-pts { font-size: 22px; font-weight: 900; }
+  .det-card.ok  .det-pts { color: #155724; }
+  .det-card.par .det-pts { color: #856404; }
+  .det-card.err .det-pts { color: #721C24; }
+  .nota-msg  { font-size: 16px; font-weight: 700; color: #888; margin-bottom: 22px; line-height: 1.6; white-space: pre-line; }
+  .btn-novo  { background: #F5A623; border: none; border-radius: 14px; padding: 13px 32px; font-size: 17px; font-weight: 900; color: #3D1C00; cursor: pointer; font-family: 'Nunito', sans-serif; box-shadow: 0 4px 0 #D4851A; text-transform: uppercase; }
+  .btn-novo:active { transform: translateY(2px); }
+
+  .hab-tag { text-align: center; font-size: 11px; font-weight: 700; color: #bbb; text-transform: uppercase; letter-spacing: 0.8px; margin-top: 8px; padding: 0 16px; }
+</style>
+</head>
+<body>
+
+<!-- TOPO -->
+<div class="topo">
+  <div class="topo-icon">🏅</div>
+  <div>
+    <div class="topo-sub">TUDO SOBRE INFORMAÇÃO</div>
+  </div>
+</div>
+
+<!-- PROGRESSO -->
+<div class="prog-wrap">
+  <div class="prog-label">PROGRESSO</div>
+  <div class="prog-track"><div class="prog-bar" id="prog-bar"></div></div>
+  <div class="prog-stars">
+    <div class="prog-star" id="ps1">⭐</div>
+    <div class="prog-star" id="ps2">⭐</div>
+    <div class="prog-star" id="ps3">⭐</div>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Q1 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-num">1</div>
+      <div class="act-title">O QUE É UMA INFORMAÇÃO?</div>
+      <div class="act-badge" id="b1">VALE 3,3 PTS</div>
+    </div>
+    <div class="act-instr">OBSERVE A CENA E TOQUE NA RESPOSTA CERTA!</div>
+    <div class="cena-box">
+      <span class="cena-emoji">👧📖✨</span>
+      <div class="cena-texto">A MARIA LÊ UM LIVRO E APRENDEU QUE OS PÁSSAROS VOAM.<br>O QUE ELA RECEBEU?</div>
+    </div>
+    <div class="opcoes-grid" id="q1-opcoes"></div>
+    <div class="feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-num">2</div>
+      <div class="act-title">ARMAZENAR OU TRANSMITIR?</div>
+      <div class="act-badge" id="b2">VALE 3,3 PTS</div>
+    </div>
+    <div class="act-instr">👆 ARRASTE CADA EXEMPLO PARA O GRUPO CERTO!</div>
+    <div class="chips-area" id="chips2"></div>
+    <div class="grupos">
+      <div class="grupo-card">
+        <div class="grupo-titulo"><span>📦</span>ARMAZENAR</div>
+        <div class="grupo-zona" id="zona-ARMAZENAR" data-cat="ARMAZENAR" ondragover="dov2(event)" ondrop="dop2(event,'zona-ARMAZENAR')" onclick="zc2('zona-ARMAZENAR')">SOLTE AQUI</div>
+      </div>
+      <div class="grupo-card">
+        <div class="grupo-titulo"><span>📡</span>TRANSMITIR</div>
+        <div class="grupo-zona" id="zona-transmitir" data-cat="transmitir" ondragover="dov2(event)" ondrop="dop2(event,'zona-transmitir')" onclick="zc2('zona-transmitir')">SOLTE AQUI</div>
+      </div>
+    </div>
+    <button class="btn-check" id="btn2" onclick="checkQ2()">VERIFICAR ✔</button>
+    <div class="feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="act-card">
+    <div class="act-header">
+      <div class="act-num">3</div>
+      <div class="act-title">COLOQUE NA ORDEM CERTA!</div>
+      <div class="act-badge" id="b3">VALE 3,4 PTS</div>
+    </div>
+    <div class="act-instr">👆 TOQUE NAS IMAGENS NA ORDEM EM QUE ACONTECE: 1º, 2º E 3º!</div>
+    <div class="seq-instr-box">VOVÓ ESCREVEU UMA CARTA E MANDOU PELO CORREIO PRA SUA NETA.</div>
+    <div class="seq-grid" id="seq-grid"></div>
+    <div class="feedback" id="fb3"></div>
+  </div>
+
+  <!-- NOTA FINAL -->
+  <div class="nota-wrap" id="nota-wrap" style="display:none">
+    <span class="nota-emoji" id="nota-emoji">🏆</span>
+    <div class="nota-estrelas" id="nota-estrelas"></div>
+    <div class="nota-titulo" id="nota-titulo"></div>
+    <div class="nota-label">SUA NOTA FINAL</div>
+    <div class="nota-circ" id="nota-circ">
+      <span class="nota-num" id="nota-num">10</span>
+      <span class="nota-de10">de 10</span>
+    </div>
+    <div class="nota-det" id="nota-det"></div>
+    <div class="nota-msg" id="nota-msg"></div>
+    <button class="btn-novo" onclick="reiniciar()">TENTAR DE NOVO ↺</button>
+  </div>
+
+  <div class="hab-tag">PROFº ADRIANA BETT TEREBINTO | ATIVIDADE PEDAGÓGICA</div>
+</div>
+
+<script>
+// ===== UTILITÁRIO =====
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ===== PONTUAÇÃO =====
+const MAXPTS = [3.3, 3.3, 3.4];
+const DESC   = 0.5;
+let pts   = [0, 0, 0];
+let erros = [0, 0, 0];
+let done  = [false, false, false];
+
+function calcPts(i) { return Math.max(0, MAXPTS[i] - erros[i] * DESC); }
+function fmt(n) {
+  const r = Math.round(n * 10) / 10;
+  return Number.isInteger(r) ? String(r) : r.toFixed(1).replace('.', ',');
+}
+function showFb(id, ok, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.className = 'feedback ' + (ok ? 'ok' : 'err') + ' show';
+}
+function setBadge(i, val) {
+  const b = document.getElementById('b' + (i + 1)); if (!b) return;
+  b.textContent = fmt(val) + ' PTS';
+  b.className = 'act-badge ' + (val >= MAXPTS[i] ? 'ok' : val >= MAXPTS[i] * 0.5 ? 'parcial' : '');
+}
+function updateProg() {
+  const c = done.filter(Boolean).length;
+  document.getElementById('prog-bar').style.width = (c / 3 * 100) + '%';
+  for (let i = 0; i < 3; i++) document.getElementById('ps' + (i + 1)).classList.toggle('on', done[i]);
+  if (c === 3) setTimeout(mostrarNota, 800);
+}
+
+// ===== Q1 — MÚLTIPLA ESCOLHA (EMBARALHADA) =====
+const q1Opcoes = [
+  { icon: '🎂', txt: 'UM BOLO',        ok: false },
+  { icon: '💡', txt: 'UMA INFORMAÇÃO', ok: true  },
+  { icon: '🎁', txt: 'UM PRESENTE',    ok: false },
+  { icon: '🐦', txt: 'UM PÁSSARO',     ok: false },
+];
+let q1done = false;
+
+function buildQ1() {
+  const grid = document.getElementById('q1-opcoes');
+  grid.innerHTML = '';
+  shuffle(q1Opcoes).forEach(op => {
+    const d = document.createElement('div');
+    d.className = 'opcao-btn';
+    d.dataset.ok = op.ok;
+    d.innerHTML = `<span class="op-icon">${op.icon}</span><span class="op-txt">${op.txt}</span>`;
+    d.onclick = () => ansQ1(d, op.ok);
+    grid.appendChild(d);
+  });
+}
+
+function ansQ1(el, ok) {
+  if (q1done) return;
+  if (ok) {
+    // Remove cliques de todos
+    document.querySelectorAll('#q1-opcoes .opcao-btn').forEach(b => b.onclick = null);
+    el.classList.add('correct');
+    pts[0] = calcPts(0); setBadge(0, pts[0]);
+    showFb('fb1', true, '✔ ISSO MESMO! UMA MENSAGEM QUE NOS FAZ ENTENDER É UMA INFORMAÇÃO! ' + fmt(pts[0]) + ' PONTOS!');
+    q1done = true; done[0] = true; updateProg();
+  } else {
+    erros[0]++;
+    el.classList.add('wrong');
+    // Desabilita clique temporariamente só neste botão
+    el.onclick = null;
+    showFb('fb1', false, '✘ NÃO É ESSE! PENSA BEM: O QUE ELA APRENDEU COM O LIVRO? (−0,5 PTS)');
+    setTimeout(() => {
+      el.classList.remove('wrong');
+      el.onclick = () => ansQ1(el, false);
+      document.getElementById('fb1').className = 'feedback';
+    }, 1800);
+  }
+}
+
+buildQ1();
+
+// ===== Q2 — ARRASTAR GRUPOS (EMBARALHADO) =====
+const chipsData = [
+  { word: 'FOTO',     cat: 'ARMAZENAR',  icon: '📷' },
+  { word: 'TELEFONE', cat: 'transmitir', icon: '☎️' },
+  { word: 'LIVRO',    cat: 'ARMAZENAR',  icon: '📚' },
+  { word: 'CARTA',    cat: 'transmitir', icon: '✉️' },
+  { word: 'CADERNO',  cat: 'ARMAZENAR',  icon: '📓' },
+  { word: 'INTERNET', cat: 'transmitir', icon: '🌐' },
+];
+const chipsCat  = Object.fromEntries(chipsData.map(c => [c.word, c.cat]));
+const chipIcons = Object.fromEntries(chipsData.map(c => [c.word, c.icon]));
+let drag2w = null, sel2w = null;
+let zonas2 = { ARMAZENAR: [], transmitir: [] };
+
+function buildChips() {
+  const area = document.getElementById('chips2');
+  area.innerHTML = '';
+  shuffle(chipsData).forEach(ch => {
+    const d = document.createElement('div');
+    d.className = 'chip';
+    d.id = 'ch-' + ch.word.toLowerCase();
+    d.draggable = true;
+    d.dataset.word = ch.word;
+    d.innerHTML = `<span class="ch-icon">${ch.icon}</span>${ch.word}`;
+    d.ondragstart = e => ds2(e, ch.word);
+    d.onclick     = () => fc2(ch.word);
+    area.appendChild(d);
+  });
+}
+
+function ds2(e, w) { drag2w = w; e.dataTransfer.effectAllowed = 'move'; }
+function dov2(e)   { e.preventDefault(); e.currentTarget.classList.add('over'); }
+function dop2(e, zid) {
+  e.preventDefault();
+  const z = document.getElementById(zid); z.classList.remove('over');
+  if (!drag2w) return; colocar2(zid, drag2w); drag2w = null;
+}
+function fc2(w) {
+  if (sel2w === w) { sel2w = null; hilight2(''); return; }
+  sel2w = w; hilight2(w);
+}
+function hilight2(w) {
+  document.querySelectorAll('.chip').forEach(c => c.style.outline = c.dataset.word === w && w ? '3px solid #F5A623' : '');
+}
+function zc2(zid) { if (sel2w) { colocar2(zid, sel2w); sel2w = null; hilight2(''); } }
+
+function colocar2(zid, word) {
+  const z = document.getElementById(zid); if (z.classList.contains('correto')) return;
+  const cat = z.dataset.cat;
+  const slot = document.createElement('div'); slot.className = 'slot-chip'; slot.dataset.word = word;
+  slot.innerHTML = `<span class="sl-icon">${chipIcons[word]}</span>${word}`;
+  slot.onclick = () => {
+    if (slot.classList.contains('ok-slot')) return;
+    const c = document.querySelector(`.chip[data-word="${word}"]`); if (c) c.classList.remove('usada');
+    zonas2[cat] = zonas2[cat].filter(w => w !== word); slot.remove();
+    if (!z.querySelector('.slot-chip')) z.innerHTML = 'SOLTE AQUI';
+  };
+  if (z.innerHTML.trim() === 'SOLTE AQUI') z.innerHTML = '';
+  z.appendChild(slot); zonas2[cat].push(word);
+  const c = document.querySelector(`.chip[data-word="${word}"]`); if (c) c.classList.add('usada');
+}
+
+function checkQ2() {
+  const total = chipsData.length;
+  const colocados = ['ARMAZENAR', 'transmitir'].reduce((a, cat) => a + document.getElementById('zona-' + cat).querySelectorAll('.slot-chip').length, 0);
+  if (colocados < total) { showFb('fb2', false, '✘ COLOQUE TODOS OS CARTÕES PRIMEIRO!'); return; }
+  let allOk = true;
+  ['ARMAZENAR', 'transmitir'].forEach(cat => {
+    const z = document.getElementById('zona-' + cat);
+    z.querySelectorAll('.slot-chip').forEach(s => {
+      if (chipsCat[s.dataset.word] === cat) { s.classList.add('ok-slot'); s.onclick = null; }
+      else { s.style.borderColor = '#DC3545'; s.style.background = '#F8D7DA'; s.style.color = '#721C24'; allOk = false; }
+    });
+    if (allOk) z.classList.add('correto');
+  });
+  if (allOk) {
+    pts[1] = calcPts(1); setBadge(1, pts[1]);
+    showFb('fb2', true, '✔ MUITO BEM! FOTO, LIVRO E CADERNO ARMAZENAM. TELEFONE, CARTA E INTERNET TRANSMITEM! ' + fmt(pts[1]) + ' PONTOS!');
+    document.getElementById('btn2').disabled = true; done[1] = true; updateProg();
+  } else {
+    erros[1]++;
+    showFb('fb2', false, '✘ ALGUNS ESTÃO NO LUGAR ERRADO! CORRIJA E TENTE DE NOVO! (−0,5 PTS)');
+    setTimeout(() => {
+      ['ARMAZENAR', 'transmitir'].forEach(cat => {
+        const z = document.getElementById('zona-' + cat);
+        z.querySelectorAll('.slot-chip:not(.ok-slot)').forEach(s => {
+          const c = document.querySelector(`.chip[data-word="${s.dataset.word}"]`); if (c) c.classList.remove('usada');
+          zonas2[cat] = zonas2[cat].filter(w => w !== s.dataset.word); s.remove();
+        });
+        z.classList.remove('correto');
+        if (!z.querySelector('.slot-chip')) z.innerHTML = 'SOLTE AQUI';
+      });
+      document.getElementById('fb2').className = 'feedback';
+    }, 2500);
+  }
+}
+
+buildChips();
+
+// ===== Q3 — SEQUÊNCIA (EMBARALHADA, SEM TRAVA) =====
+const seqItens = [
+  { ordem: 1, icon: '👵✍️', lbl: 'VOVÓ ESCREVEU' },
+  { ordem: 2, icon: '✉️',   lbl: 'CARTA NO CORREIO' },
+  { ordem: 3, icon: '👧📖', lbl: 'NETA RECEBEU' },
+];
+let seqOrdem = [], seqDone = false;
+
+function buildSeq() {
+  const grid = document.getElementById('seq-grid');
+  grid.innerHTML = '';
+  shuffle(seqItens).forEach((item, idx) => {
+    const d = document.createElement('div');
+    d.className = 'seq-card';
+    d.dataset.ordem = item.ordem;
+    d.innerHTML = `<div class="seq-num"></div><span class="seq-icon">${item.icon}</span><span class="seq-lbl">${item.lbl}</span>`;
+    d.onclick = () => seqClick(d);
+    grid.appendChild(d);
+  });
+}
+
+function seqClick(el) {
+  if (seqDone || el.classList.contains('correto')) return;
+
+  const cards = Array.from(document.querySelectorAll('.seq-card'));
+  const idx   = cards.indexOf(el);
+  const numEl = el.querySelector('.seq-num');
+
+  // Se já estava selecionado → desmarcar
+  if (el.classList.contains('selecionado')) {
+    el.classList.remove('selecionado');
+    numEl.textContent = '';
+    numEl.className   = 'seq-num';
+    seqOrdem = seqOrdem.filter(i => i !== idx);
+    recalcNums();
+    return;
+  }
+
+  // Não permite mais de 3
+  if (seqOrdem.length >= 3) return;
+
+  seqOrdem.push(idx);
+  numEl.textContent = seqOrdem.length;
+  numEl.className   = 'seq-num ok';
+  el.classList.add('selecionado');
+
+  if (seqOrdem.length === 3) checkSeq();
+}
+
+function recalcNums() {
+  document.querySelectorAll('.seq-card').forEach((c, i) => {
+    const n = c.querySelector('.seq-num');
+    const p = seqOrdem.indexOf(i);
+    if (p >= 0) { n.textContent = p + 1; n.className = 'seq-num ok'; c.classList.add('selecionado'); }
+    else        { n.textContent = '';    n.className = 'seq-num';    c.classList.remove('selecionado'); }
+  });
+}
+
+function checkSeq() {
+  const cards = Array.from(document.querySelectorAll('.seq-card'));
+  let allOk = true;
+
+  seqOrdem.forEach((cardIdx, pos) => {
+    const card         = cards[cardIdx];
+    const ordemCorreta = parseInt(card.dataset.ordem);
+    if (ordemCorreta === pos + 1) {
+      card.classList.remove('selecionado', 'errado');
+      card.classList.add('correto');
+    } else {
+      card.classList.add('errado');
+      allOk = false;
+    }
+  });
+
+  if (allOk) {
+    seqDone = true;
+    pts[2] = calcPts(2); setBadge(2, pts[2]);
+    showFb('fb3', true, '✔ PERFEITO! A ORDEM CERTA É: VOVÓ ESCREVE → CARTA NO CORREIO → NETA RECEBEU! ' + fmt(pts[2]) + ' PONTOS!');
+    done[2] = true; updateProg();
+  } else {
+    erros[2]++;
+    showFb('fb3', false, '✘ A ORDEM NÃO ESTÁ CERTA! TOQUE NOS NÚMEROS PARA DESMARCAR E TENTE DE NOVO! (−0,5 PTS)');
+    // Limpa só os errados após 2s, mantendo os corretos
+    setTimeout(() => {
+      const allCards = Array.from(document.querySelectorAll('.seq-card'));
+      // Remove seleção de todos que não estão corretos
+      allCards.forEach(c => {
+        if (!c.classList.contains('correto')) {
+          c.classList.remove('selecionado', 'errado');
+          c.querySelector('.seq-num').textContent = '';
+          c.querySelector('.seq-num').className   = 'seq-num';
+        }
+      });
+      // Reconstroi seqOrdem apenas com os corretos (índices que têm classe correto)
+      seqOrdem = allCards
+        .map((c, i) => c.classList.contains('correto') ? i : -1)
+        .filter(i => i >= 0);
+      document.getElementById('fb3').className = 'feedback';
+    }, 2200);
+  }
+}
+
+buildSeq();
+
+// ===== NOTA FINAL =====
+function mostrarNota() {
+  const total = pts.reduce((a, b) => a + b, 0);
+  const nota  = Math.round(total * 10) / 10;
+
+  // Preenche os dados ANTES de mostrar
+  document.getElementById('nota-num').textContent = fmt(nota);
+  const circ = document.getElementById('nota-circ');
+  circ.className = 'nota-circ ' + (nota === 10 ? 'n10' : nota >= 7 ? 'nalta' : nota >= 5 ? 'nmed' : 'nbaixa');
+
+  const nomes = ['O QUE É INFO.', 'ARMAZENAR/TRANSMITIR', 'SEQUÊNCIA'];
+  document.getElementById('nota-det').innerHTML = pts.map((p, i) =>
+    `<div class="det-card ${p >= MAXPTS[i] ? 'ok' : p >= MAXPTS[i] * 0.5 ? 'par' : 'err'}">
+       <div class="det-nome">${nomes[i]}</div>
+       <div class="det-pts">${fmt(p)} pts</div>
+     </div>`
+  ).join('');
+
+  let emoji, ests, titulo, msg;
+  if      (nota === 10) { emoji='🏆'; ests='⭐⭐⭐'; titulo='NOTA 10! VOCÊ É DEMAIS!';  msg='PARABÉNS!\nVOCÊ APRENDEU TUDO SOBRE A INFORMAÇÃO!\nCOMO ELA É, COMO SE GUARDA\nE COMO SE TRANSMITE!'; }
+  else if (nota >= 7)   { emoji='😄'; ests='⭐⭐';   titulo='MUITO BEM!';               msg='VOCÊ APRENDEU QUASE TUDO!\nTENTE DE NOVO PARA TIRAR NOTA 10!'; }
+  else if (nota >= 5)   { emoji='😊'; ests='⭐';     titulo='BOM TRABALHO!';            msg='VOCÊ ESTÁ NO CAMINHO CERTO!\nRELEIA O CONTEÚDO E TENTE DE NOVO!'; }
+  else                  { emoji='💪'; ests='⭐';     titulo='CONTINUE TENTANDO!';       msg='NÃO DESANIME!\nPEÇA AO PROFESSOR PARA AJUDAR\nE TENTE DE NOVO!'; }
+
+  document.getElementById('nota-emoji').textContent    = emoji;
+  document.getElementById('nota-estrelas').textContent = ests;
+  document.getElementById('nota-titulo').textContent   = titulo;
+  document.getElementById('nota-msg').textContent      = msg;
+
+  // Força exibição e rola até o card
+  const wrap = document.getElementById('nota-wrap');
+  wrap.style.display = 'block';          // garante visível mesmo sem animation
+  wrap.classList.add('show');
+  setTimeout(() => wrap.scrollIntoView({ behavior: 'smooth', block: 'start' }), 100);
+}
+
+// ===== REINICIAR =====
+function reiniciar() {
+  pts = [0,0,0]; erros = [0,0,0]; done = [false,false,false];
+  document.getElementById('prog-bar').style.width = '0%';
+  for (let i = 0; i < 3; i++) {
+    document.getElementById('ps' + (i + 1)).classList.remove('on');
+    const b = document.getElementById('b' + (i + 1));
+    const labels = ['VALE 3,3 PTS', 'VALE 3,3 PTS', 'VALE 3,4 PTS'];
+    if (b) { b.textContent = labels[i]; b.className = 'act-badge'; }
+  }
+  // Q1
+  q1done = false;
+  buildQ1();
+  document.getElementById('fb1').className = 'feedback';
+  // Q2
+  drag2w = null; sel2w = null; zonas2 = { ARMAZENAR: [], transmitir: [] };
+  buildChips();
+  ['ARMAZENAR', 'transmitir'].forEach(cat => {
+    const z = document.getElementById('zona-' + cat);
+    z.innerHTML = 'SOLTE AQUI'; z.classList.remove('correto');
+  });
+  document.getElementById('btn2').disabled = false;
+  document.getElementById('fb2').className = 'feedback';
+  // Q3
+  seqOrdem = []; seqDone = false;
+  buildSeq();
+  document.getElementById('fb3').className = 'feedback';
+  const wrap = document.getElementById('nota-wrap');
+  wrap.classList.remove('show');
+  wrap.style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+</script>
+</body>
+</html>
