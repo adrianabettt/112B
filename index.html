@@ -213,7 +213,7 @@ const q1Opts=[
   {icon:'🗣️', txt:'FALA',    ok:true },
   {icon:'✏️', txt:'DESENHO', ok:false},
   {icon:'🔢', txt:'NÚMERO',  ok:false},
-  {icon:'🪧', txt:'SINAL',   ok:false},
+  {icon:'🫶', txt:'SINAIS',   ok:false},
 ];
 let q1done=false;
 function buildQ1(){
@@ -241,12 +241,12 @@ function ansQ1(el,ok){
 buildQ1();
 
 // Q2 — ARRASTAR GRUPOS
-// VEMOS: desenho, número, sinal | OUVIMOS: fala
+// VEMOS: desenho, número, placa | OUVIMOS: fala
 const chipsData=[
   {word:'FALA',    cat:'ouvimos', icon:'🗣️'},
   {word:'DESENHO', cat:'vemos',   icon:'✏️'},
   {word:'NÚMERO',  cat:'vemos',   icon:'🔢'},
-  {word:'SINAL',   cat:'vemos',   icon:'🪧'},
+  {word:'SONS',   cat:'ouvimos',   icon:'📻'},
 ];
 const chipsCat=Object.fromEntries(chipsData.map(c=>[c.word,c.cat]));
 const chipIcons=Object.fromEntries(chipsData.map(c=>[c.word,c.icon]));
