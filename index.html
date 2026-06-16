@@ -10,8 +10,8 @@
   body { font-family: 'Nunito', sans-serif; background: #FFF8EE; min-height: 100vh; padding: 0 0 60px; }
 
   .topo { background: #F5A623; padding: 16px 20px; display: flex; align-items: center; gap: 12px; box-shadow: 0 4px 0 #D4851A; }
-  .topo-icon { font-size: 42px; line-height: 1; }
-  .topo-title { font-size: 20px; font-weight: 900; color: #3D1C00; line-height: 1.1; }
+  .topo-icon { font-size: 25px; line-height: 1; }
+  .topo-title { font-size: 15px; font-weight: 900; color: #3D1C00; line-height: 1.1; }
   .topo-sub { font-size: 13px; font-weight: 700; color: #6B3000; margin-top: 2px; text-transform: uppercase; letter-spacing: 1px; }
 
   /* PROGRESSO */
@@ -114,8 +114,7 @@
   <div class="topo-icon">🎯</div>
   <div>
     <div class="topo-title">LINGUAGENS DA INFORMAÇÃO</div>
-    <div class="topo-sub">1º ANO · ATIVIDADE B</div>
-  </div>
+    </div>
 </div>
 
 <!-- PROGRESSO -->
@@ -135,12 +134,10 @@
     <div class="act-header">
       <div class="act-num">1</div>
       <div class="act-title">QUAL É A RESPOSTA CERTA?</div>
-      <div class="act-badge" id="b1">VALE 5 PTS</div>
-    </div>
-    <div class="act-instr">👆 TOQUE NA RESPOSTA CERTA!</div>
-    <div class="cena-box">
+         </div>
+     <div class="cena-box">
       <span class="cena-emoji">👦💬✨</span>
-      <div class="cena-texto">O JOÃO CONTOU UMA HISTÓRIA PARA OS AMIGOS EM VOZ ALTA.<br>QUE LINGUAGEM ELE USOU?</div>
+      <div class="cena-texto">O JOÃO CONTOU UMA HISTÓRIA</p> PARA OS AMIGOS EM VOZ ALTA.<br></p></p>QUE LINGUAGEM ELE USOU?</div>
     </div>
     <div class="opcoes-grid" id="q1-opcoes"></div>
     <div class="feedback" id="fb1"></div>
@@ -150,11 +147,9 @@
   <div class="act-card">
     <div class="act-header">
       <div class="act-num">2</div>
-      <div class="act-title">COLOQUE NO GRUPO CERTO!</div>
-      <div class="act-badge" id="b2">VALE 5 PTS</div>
-    </div>
-    <div class="act-instr">👆 ARRASTE CADA LINGUAGEM PARA O GRUPO CERTO! (OU TOQUE E DEPOIS NA CAIXA)</div>
-    <div class="chips-area" id="chips2"></div>
+      <div class="act-title">ARRASTE CADA LINGUAGEM PARA O GRUPO CORRETO. SÃO 4! </div>
+       </div>
+       <div class="chips-area" id="chips2"></div>
     <div class="grupos">
       <div class="grupo-card">
         <div class="grupo-titulo"><span>👁️</span>VEMOS</div>
@@ -213,7 +208,7 @@ const q1Opts=[
   {icon:'🗣️', txt:'FALA',    ok:true },
   {icon:'✏️', txt:'DESENHO', ok:false},
   {icon:'🔢', txt:'NÚMERO',  ok:false},
-  {icon:'🫶', txt:'SINAIS',   ok:false},
+  {icon:'🧏', txt:'SINAIS',   ok:false},
 ];
 let q1done=false;
 function buildQ1(){
@@ -241,12 +236,12 @@ function ansQ1(el,ok){
 buildQ1();
 
 // Q2 — ARRASTAR GRUPOS
-// VEMOS: desenho, número, placa | OUVIMOS: fala
+// VEMOS: desenho, número, sinal | OUVIMOS: fala
 const chipsData=[
   {word:'FALA',    cat:'ouvimos', icon:'🗣️'},
   {word:'DESENHO', cat:'vemos',   icon:'✏️'},
-  {word:'NÚMERO',  cat:'vemos',   icon:'🔢'},
-  {word:'SONS',   cat:'ouvimos',   icon:'📻'},
+  {word:'SONS',  cat:'ouvimos',   icon:'🪗'},
+  {word:'PLACAS',   cat:'vemos',   icon:'🪧'},
 ];
 const chipsCat=Object.fromEntries(chipsData.map(c=>[c.word,c.cat]));
 const chipIcons=Object.fromEntries(chipsData.map(c=>[c.word,c.icon]));
